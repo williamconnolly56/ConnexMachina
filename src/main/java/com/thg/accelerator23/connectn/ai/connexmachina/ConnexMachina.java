@@ -27,8 +27,8 @@ public class ConnexMachina extends Player {
     int[] columnsNotFull = new int[10];
     int index = 0;
 
-    for (int column = 1; column <= 10; column++) {
-      Position topOfColumn = new Position(column, 8);
+    for (int column = 0; column <= 9; column++) {
+      Position topOfColumn = new Position(column, 7);
       if (!board.hasCounterAtPosition(topOfColumn)) {
         columnsNotFull[index++] = column;
       }
