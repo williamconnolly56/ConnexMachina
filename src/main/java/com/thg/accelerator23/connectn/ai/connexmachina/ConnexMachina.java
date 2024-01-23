@@ -108,7 +108,6 @@ public class ConnexMachina extends Player {
 
       }
     }
-
     return boardValue;
   }
 
