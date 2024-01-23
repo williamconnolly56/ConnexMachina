@@ -17,7 +17,7 @@ public class ConnexMachina extends Player {
   @Override
   public int makeMove(Board board) {
     try {
-      return findBestMove(board, 3);
+      return findBestMove(board, 5);
     } catch (InvalidMoveException e) {
       throw new RuntimeException(e);
     }
@@ -54,11 +54,14 @@ public class ConnexMachina extends Player {
     int maxEval = Integer.MIN_VALUE;
     boolean maximisingPlayer;
     maximisingPlayer = counter.getStringRepresentation().equals("X");
+    if(maximisingPlayer)
+    {
+      System.out.println("I am the maximising player");
+    }
     for (int move : legalMoves(board)) {
       Board newBoard =  new Board (board, move, counter);
       int eval = minimax(newBoard, depth - 1, maximisingPlayer);
       if (eval > maxEval) {
-        System.out.println("found a bestMove");
         maxEval = eval;
         bestMove = move;
       }
@@ -75,37 +78,38 @@ public class ConnexMachina extends Player {
     return -1;
   }
   private int evaluate(Board board, boolean maximizingPlayer) {
-    int boardValue=0;
+    int boardValue = 0;
 
     for (int column = 0; column <= 9; column++) {
       int maxY = getYCoord(board, column);
       int lookingDepth;
-      if (maxY<3){
-        lookingDepth = maxY+1;
+      if (maxY < 3) {
+        lookingDepth = maxY + 1;
       } else {
         lookingDepth = 4;
       }
       int[] lookingDown = new int[lookingDepth];
 
-      for(int i = 0; i<lookingDepth; i++) {
-        int height = maxY-i;
+      for (int i = 0; i < lookingDepth; i++) {
+        int height = maxY - i;
         Position position = new Position(column, height);
         lookingDown[i] = getBinaryCounterAtPosition(board, position);
       }
       boardValue += findVerticalValue(lookingDown, counterToBinary(counter), maximizingPlayer);
+      boardValue += findVerticalValue(lookingDown, -counterToBinary(counter), !maximizingPlayer);
 
-      if(column < 7) {
+      if (column < 7) {
 
-        for(int row=maxY; row>=0; row--) {
+        for (int row = maxY; row >= 0; row--) {
 
           int[] lookingRight = new int[4];
-          for (int i = 0 ; i<4; i++) {
-            Position position = new Position(column+i, row);
+          for (int i = 0; i < 4; i++) {
+            Position position = new Position(column + i, row);
             lookingRight[i] = getBinaryCounterAtPosition(board, position);
           }
           boardValue += findHorizontalValue(lookingRight, counterToBinary(counter), maximizingPlayer);
+          boardValue += findHorizontalValue(lookingRight, -counterToBinary(counter), !maximizingPlayer);
         }
-
       }
     }
     return boardValue;
