@@ -163,7 +163,8 @@ public class ConnexMachina extends Player {
     for (int column = 0; column <= 9; column++) {
       Position topOfColumn = new Position(column, 7);
       if (!board.hasCounterAtPosition(topOfColumn)) {
-        columnsNotFull[index++] = column;
+        columnsNotFull[index] = column;
+        index++;
       }
     }
 
