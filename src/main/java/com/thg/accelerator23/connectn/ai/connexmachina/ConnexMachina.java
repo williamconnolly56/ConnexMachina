@@ -94,7 +94,7 @@ public class ConnexMachina extends Player {
         Position position = new Position(column, height);
         lookingDown[i] = getBinaryCounterAtPosition(board, position);
       }
-      boardValue += findVerticalValue(lookingDown, counterToBinary(counter));
+      boardValue += findVerticalValue(lookingDown, counterToBinary(counter), maximisingPlayer);
 
       if(column < 7) {
 
@@ -105,7 +105,7 @@ public class ConnexMachina extends Player {
             Position position = new Position(column+i, row);
             lookingRight[i] = getBinaryCounterAtPosition(board, position);
           }
-          boardValue += findHorizontalValue(lookingRight, counterToBinary(counter));
+          boardValue += findHorizontalValue(lookingRight, counterToBinary(counter), maximisingPlayer);
         }
 
       }
@@ -114,15 +114,19 @@ public class ConnexMachina extends Player {
     return boardValue;
   }
 
-  public int findVerticalValue(int[] inputArray, int opponentCounter){
+  public int findVerticalValue(int[] inputArray, int opponentCounter, boolean maximisingPlayer){
     int count=0;
     while (inputArray[count] != opponentCounter) {
       count++;
     }
-    return count;
+    if (maximisingPlayer){
+      return count;
+    } else {
+      return -count;
+    }
   }
 
-  public int findHorizontalValue(int[] inputArray, int currentPlayerCounter){
+  public int findHorizontalValue(int[] inputArray, int currentPlayerCounter, boolean maximisingPlayer){
     int count=0;
     for (int i: inputArray){
       int value = inputArray[i];
@@ -132,7 +136,11 @@ public class ConnexMachina extends Player {
         count++;
       }
     }
-    return count;
+    if (maximisingPlayer){
+      return count;
+    } else {
+      return -count;
+    }
   }
 
   public int counterToBinary(Counter counter) {
