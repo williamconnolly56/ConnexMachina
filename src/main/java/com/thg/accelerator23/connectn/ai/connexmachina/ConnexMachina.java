@@ -3,8 +3,6 @@ package com.thg.accelerator23.connectn.ai.connexmachina;
 import com.thehutgroup.accelerator.connectn.player.*;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 
 public class ConnexMachina extends Player {
@@ -23,15 +21,13 @@ public class ConnexMachina extends Player {
     } catch (InvalidMoveException e) {
       throw new RuntimeException(e);
     }
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
   }
 
 
   public int minimax(Board board, int depth, boolean maximizingPlayer) throws InvalidMoveException {
     // may need to ad 'OR if game is over' clause to the if statement
     if (depth == 0) {
-      return evaluate(board);
+      return evaluate(board, maximizingPlayer);
     }
 
     if (maximizingPlayer) {
@@ -56,10 +52,13 @@ public class ConnexMachina extends Player {
   public int findBestMove(Board board, int depth) throws InvalidMoveException {
     int bestMove = -1;
     int maxEval = Integer.MIN_VALUE;
+    boolean maximisingPlayer;
+    maximisingPlayer = counter.getStringRepresentation().equals("X");
     for (int move : legalMoves(board)) {
       Board newBoard =  new Board (board, move, counter);
-      int eval = minimax(newBoard, depth - 1, false);
+      int eval = minimax(newBoard, depth - 1, maximisingPlayer);
       if (eval > maxEval) {
+        System.out.println("found a bestMove");
         maxEval = eval;
         bestMove = move;
       }
@@ -75,8 +74,7 @@ public class ConnexMachina extends Player {
     }
     return -1;
   }
-  private int evaluate(Board board) {
-
+  private int evaluate(Board board, boolean maximizingPlayer) {
     int boardValue=0;
 
     for (int column = 0; column <= 9; column++) {
@@ -94,7 +92,7 @@ public class ConnexMachina extends Player {
         Position position = new Position(column, height);
         lookingDown[i] = getBinaryCounterAtPosition(board, position);
       }
-      boardValue += findVerticalValue(lookingDown, counterToBinary(counter), maximisingPlayer);
+      boardValue += findVerticalValue(lookingDown, counterToBinary(counter), maximizingPlayer);
 
       if(column < 7) {
 
@@ -105,7 +103,7 @@ public class ConnexMachina extends Player {
             Position position = new Position(column+i, row);
             lookingRight[i] = getBinaryCounterAtPosition(board, position);
           }
-          boardValue += findHorizontalValue(lookingRight, counterToBinary(counter), maximisingPlayer);
+          boardValue += findHorizontalValue(lookingRight, counterToBinary(counter), maximizingPlayer);
         }
 
       }
