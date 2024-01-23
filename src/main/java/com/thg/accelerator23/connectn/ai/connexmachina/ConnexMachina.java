@@ -125,7 +125,7 @@ public class ConnexMachina extends Player {
 
   public int findHorizontalValue(int[] inputArray, int currentPlayerCounter, boolean maximisingPlayer){
     int count=0;
-    for (int i: inputArray){
+    for (int i=0; i<inputArray.length; i++){
       int value = inputArray[i];
       if (value == (currentPlayerCounter *-1)) {
         return 0;
