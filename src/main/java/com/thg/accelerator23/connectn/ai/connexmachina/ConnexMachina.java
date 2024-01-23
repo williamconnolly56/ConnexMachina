@@ -113,7 +113,7 @@ public class ConnexMachina extends Player {
 
   public int findVerticalValue(int[] inputArray, int opponentCounter, boolean maximisingPlayer){
     int count=0;
-    while (inputArray[count] != opponentCounter) {
+    while (count < inputArray.length && inputArray[count] != opponentCounter) {
       count++;
     }
     if (maximisingPlayer){
