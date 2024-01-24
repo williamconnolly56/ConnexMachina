@@ -107,9 +107,18 @@ public class ConnexMachina extends Player {
                 Position position = new Position(column, height);
                 lookingDown[i] = getBinaryCounterAtPosition(board, position);
             }
-            boardValue += findVerticalValue(lookingDown, counterToBinary(counter));
-            boardValue -= findVerticalValue(lookingDown, -counterToBinary(counter));
-
+            int maxValDown = findVerticalValue(lookingDown, counterToBinary(counter));
+            if (maxValDown == 4) {
+                boardValue += 1000;
+            } else {
+                boardValue += maxValDown;
+            }
+            int minValDown = findVerticalValue(lookingDown, -counterToBinary(counter));
+            if (minValDown == 4) {
+                boardValue -= 900;
+            } else {
+                boardValue -= minValDown;
+            }
             if (column < 7) {
 
                 for (int row = maxY; row >= 0; row--) {
@@ -119,8 +128,18 @@ public class ConnexMachina extends Player {
                         Position position = new Position(column + i, row);
                         lookingRight[i] = getBinaryCounterAtPosition(board, position);
                     }
-                    boardValue += findHorizontalValue(lookingRight, counterToBinary(counter));
-                    boardValue -= findHorizontalValue(lookingRight, -counterToBinary(counter));
+                    int maxValRight = findHorizontalValue(lookingRight, counterToBinary(counter));
+                    if(maxValRight == 4) {
+                        boardValue += 1000;
+                    } else {
+                        boardValue += maxValRight;
+                    }
+                    int minValRight = findHorizontalValue(lookingRight, -counterToBinary(counter));
+                    if(minValRight == 4) {
+                        boardValue -= 900;
+                    } else {
+                        boardValue -= minValRight;
+                    }
                 }
             }
         }
