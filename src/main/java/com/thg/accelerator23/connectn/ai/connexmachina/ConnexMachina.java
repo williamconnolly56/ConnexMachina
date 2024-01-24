@@ -20,7 +20,6 @@ public class ConnexMachina extends Player {
     public static int[] legalMoves(Board board) {
         int[] columnsNotFull = new int[10];
         int index = 0;
-
         for (int column = 0; column <= 9; column++) {
             Position topOfColumn = new Position(column, 7);
             if (!board.hasCounterAtPosition(topOfColumn)) {
@@ -28,8 +27,6 @@ public class ConnexMachina extends Player {
                 index++;
             }
         }
-
-        // Trim the array to the actual size of elements
         return Arrays.copyOf(columnsNotFull, index);
     }
 
@@ -70,8 +67,6 @@ public class ConnexMachina extends Player {
     public int findBestMove(Board board, int depth) throws InvalidMoveException {
         int bestMove = -1;
         int maxEval = Integer.MIN_VALUE;
-//        boolean isMaximisingPlayer;
-//        isMaximisingPlayer = true; // I CHANGED THIS BUT NOT SURE IF CORRECT
         for (int move : legalMoves(board)) {
             Board newBoard = new Board(board, move, counter);
             int eval = minimax(newBoard, depth - 1, false);
