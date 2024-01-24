@@ -45,7 +45,7 @@ public class ConnexMachina extends Player {
     public int minimax(Board board, int depth, boolean maximizingPlayer) throws InvalidMoveException {
         // may need to ad 'OR if game is over' clause to the if statement
         if (depth == 0) {
-            return evaluate(board, maximizingPlayer);
+            return evaluate(board);
         }
 
         if (maximizingPlayer) {
@@ -112,8 +112,8 @@ public class ConnexMachina extends Player {
                 Position position = new Position(column, height);
                 lookingDown[i] = getBinaryCounterAtPosition(board, position);
             }
-            boardValue += findVerticalValue(lookingDown, counterToBinary(counter), true);
-            boardValue += findVerticalValue(lookingDown, -counterToBinary(counter), false);
+            boardValue += findVerticalValue(lookingDown, counterToBinary(counter));
+            boardValue -= findVerticalValue(lookingDown, -counterToBinary(counter));
 
             if (column < 7) {
 
@@ -124,27 +124,23 @@ public class ConnexMachina extends Player {
                         Position position = new Position(column + i, row);
                         lookingRight[i] = getBinaryCounterAtPosition(board, position);
                     }
-                    boardValue += findHorizontalValue(lookingRight, counterToBinary(counter), true);
-                    boardValue += findHorizontalValue(lookingRight, -counterToBinary(counter), false);
+                    boardValue += findHorizontalValue(lookingRight, counterToBinary(counter));
+                    boardValue -= findHorizontalValue(lookingRight, -counterToBinary(counter));
                 }
             }
         }
         return boardValue;
     }
 
-    public int findVerticalValue(int[] inputArray, int opponentCounter, boolean maximisingPlayer) {
+    public int findVerticalValue(int[] inputArray, int opponentCounter) {
         int count = 0;
         while (count < inputArray.length && inputArray[count] != opponentCounter) {
             count++;
         }
-        if (maximisingPlayer) {
-            return count;
-        } else {
-            return -count;
-        }
+        return count;
     }
 
-    public int findHorizontalValue(int[] inputArray, int currentPlayerCounter, boolean maximisingPlayer) {
+    public int findHorizontalValue(int[] inputArray, int currentPlayerCounter) {
         int count = 0;
         for (int i = 0; i < inputArray.length; i++) {
             int value = inputArray[i];
@@ -154,11 +150,7 @@ public class ConnexMachina extends Player {
                 count++;
             }
         }
-        if (maximisingPlayer) {
-            return count;
-        } else {
-            return -count;
-        }
+        return count;
     }
 
     public int counterToBinary(Counter counter) {
