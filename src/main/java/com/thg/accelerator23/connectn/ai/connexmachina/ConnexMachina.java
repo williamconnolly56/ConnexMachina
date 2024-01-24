@@ -43,7 +43,8 @@ public class ConnexMachina extends Player {
 
     public int minimax(Board board, int depth, boolean maximizingPlayer) throws InvalidMoveException {
         // may need to ad 'OR if game is over' clause to the if statement
-        if (depth == 0) {
+        boolean isTerminalNode = isTerminalNode(board);
+        if(depth == 0 || isTerminalNode) {
             return evaluate(board);
         }
 
@@ -81,8 +82,17 @@ public class ConnexMachina extends Player {
     }
 
 
-    private int evaluate(Board board) {
-        Counter winner = boardAnalyser.calculateGameState(board).getWinner();
+    private boolean isTerminalNode(Board board) {
+        GameState gameState = boardAnalyser.calculateGameState(board);
+        if(getWinner(gameState) != 0 || gameState.getIsFull()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private int getWinner(GameState gameState) {
+        Counter winner = gameState.getWinner();
         if(winner == null){
             return 0;
         } else if (winner.equals(counter)) {
@@ -90,5 +100,9 @@ public class ConnexMachina extends Player {
         } else {
             return -1;
         }
+    }
+
+    private int evaluate(Board board) {
+        return getWinner(boardAnalyser.calculateGameState(board));
     }
 }

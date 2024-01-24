@@ -11,6 +11,7 @@ public class GameState {
     private boolean win;
     private boolean draw;
     private Counter winner;
+    private boolean isFull;
 
     public GameState(Counter winner) {
         this.winner = winner;
@@ -19,6 +20,7 @@ public class GameState {
 
     public GameState(Map<Counter, Integer> maxInARowByCounter, GameConfig config, boolean isFull) {
         this.maxInARowByCounter = maxInARowByCounter;
+        this.isFull = isFull;
         calculateProperties(config, isFull);
     }
 
@@ -46,6 +48,8 @@ public class GameState {
     public Counter getWinner() {
         return winner;
     }
+
+    public boolean getIsFull() {return isFull;}
 
     public Map<Counter, Integer> getMaxInARowByCounter() {
         return maxInARowByCounter;
