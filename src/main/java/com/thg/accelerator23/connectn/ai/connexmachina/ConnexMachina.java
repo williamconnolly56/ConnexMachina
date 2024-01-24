@@ -1,19 +1,18 @@
 package com.thg.accelerator23.connectn.ai.connexmachina;
 
-import com.thehutgroup.accelerator.connectn.player.*;
-
-import java.util.ArrayList;
+import com.thehutgroup.accelerator.connectn.player.Board;
+import com.thehutgroup.accelerator.connectn.player.Counter;
+import com.thehutgroup.accelerator.connectn.player.GameConfig;
+import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
+import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thehutgroup.accelerator.connectn.player.Position;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 public class ConnexMachina extends Player {
 
     private final Counter counter;
-    private final BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(10,8,4));
+    private final BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(10, 8, 4));
 
     public ConnexMachina(Counter counter) {
         super(counter, ConnexMachina.class.getName());
@@ -83,22 +82,13 @@ public class ConnexMachina extends Player {
 
 
     private int evaluate(Board board) {
-        Map<Counter, Integer> maxInRow = boardAnalyser.calculateGameState(board).getMaxInARowByCounter();
-
-        Counter currentCounter = counter;
-        Counter otherCounter = counter.getOther();
-
-        if (maxInRow.get(currentCounter) == 4) {
+        Counter winner = boardAnalyser.calculateGameState(board).getWinner();
+        if (winner.equals(counter)) {
             return 1;
-        }
-        else if (maxInRow.get(otherCounter) == 4) {
+        } else if (winner.equals(counter.getOther())) {
             return -1;
-        }
-        else {
+        } else {
             return 0;
         }
     }
-
-
-
 }
