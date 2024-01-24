@@ -5,12 +5,19 @@ import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
 import com.thehutgroup.accelerator.connectn.player.Position;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class ConnexMachina extends Player {
 
     private final Counter counter;
+    private BoardAnalyser boardAnalyser;
 
     public ConnexMachina(Counter counter) {
         super(counter, ConnexMachina.class.getName());
@@ -33,7 +40,7 @@ public class ConnexMachina extends Player {
     @Override
     public int makeMove(Board board) {
         try {
-            return findBestMove(board, 7);
+            return findBestMove(board, 5);
         } catch (InvalidMoveException e) {
             throw new RuntimeException(e);
         }
@@ -71,7 +78,6 @@ public class ConnexMachina extends Player {
             Board newBoard = new Board(board, move, counter);
             int eval = minimax(newBoard, depth - 1, false);
             if (eval > maxEval) {
-                System.out.println("found a bestMove");
                 maxEval = eval;
                 bestMove = move;
             }
@@ -79,106 +85,24 @@ public class ConnexMachina extends Player {
         return bestMove;
     }
 
-    public int getYCoord(Board board, int x) {
-        for (int y = 0; y < 8; y++) {
-            if (!board.hasCounterAtPosition(new Position(x, y))) {
-                return y;
-            }
-        }
-        return -1;
-    }
 
     private int evaluate(Board board) {
-        int boardValue = 0;
+        Map<Counter, Integer> maxInRow = boardAnalyser.calculateGameState(board).getMaxInARowByCounter();
 
-        for (int column = 0; column <= 9; column++) {
-            int maxY = getYCoord(board, column);
-            int lookingDepth;
-            if (maxY < 3) {
-                lookingDepth = maxY + 1;
-            } else {
-                lookingDepth = 4;
-            }
-            int[] lookingDown = new int[lookingDepth];
+        Counter currentCounter = counter;
+        Counter otherCounter = counter.getOther();
 
-            for (int i = 0; i < lookingDepth; i++) {
-
-                int height = maxY - i;
-                Position position = new Position(column, height);
-                lookingDown[i] = getBinaryCounterAtPosition(board, position);
-            }
-            int maxValDown = findVerticalValue(lookingDown, counterToBinary(counter));
-            if (maxValDown == 4) {
-                boardValue += 1000;
-            } else {
-                boardValue += maxValDown;
-            }
-            int minValDown = findVerticalValue(lookingDown, -counterToBinary(counter));
-            if (minValDown == 4) {
-                boardValue -= 1000;
-            } else {
-                boardValue -= minValDown;
-            }
-            if (column < 7) {
-
-                for (int row = maxY; row >= 0; row--) {
-
-                    int[] lookingRight = new int[4];
-                    for (int i = 0; i < 4; i++) {
-                        Position position = new Position(column + i, row);
-                        lookingRight[i] = getBinaryCounterAtPosition(board, position);
-                    }
-                    int maxValRight = findHorizontalValue(lookingRight, counterToBinary(counter));
-                    if(maxValRight == 4) {
-                        boardValue += 1000;
-                    } else {
-                        boardValue += maxValRight;
-                    }
-                    int minValRight = findHorizontalValue(lookingRight, -counterToBinary(counter));
-                    if(minValRight == 4) {
-                        boardValue -= 900;
-                    } else {
-                        boardValue -= minValRight;
-                    }
-                }
-            }
-        }
-        return boardValue;
-    }
-
-    public int findVerticalValue(int[] inputArray, int opponentCounter) {
-        int count = 0;
-        while (count < inputArray.length && inputArray[count] != opponentCounter) {
-            count++;
-        }
-        return count;
-    }
-
-    public int findHorizontalValue(int[] inputArray, int currentPlayerCounter) {
-        int count = 0;
-        for (int i = 0; i < inputArray.length; i++) {
-            int value = inputArray[i];
-            if (value == (currentPlayerCounter * -1)) {
-                return 0;
-            } else if (value == currentPlayerCounter) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public int counterToBinary(Counter counter) {
-        if (counter == null) {
-            return 0;
-        } else if (counter.getStringRepresentation().equals("X")) {
+        if (maxInRow.get(currentCounter) == 4) {
             return 1;
-        } else {
+        }
+        else if (maxInRow.get(otherCounter) == 4) {
             return -1;
         }
+        else {
+            return 0;
+        }
     }
 
-    public int getBinaryCounterAtPosition(Board board, Position position) {
-        Counter counter = board.getCounterAtPosition(position);
-        return counterToBinary(counter);
-    }
+
+
 }
