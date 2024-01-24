@@ -35,7 +35,7 @@ public class ConnexMachina extends Player {
     @Override
     public int makeMove(Board board) {
         try {
-            return findBestMove(board, 6);
+            return findBestMove(board, 5);
         } catch (InvalidMoveException e) {
             throw new RuntimeException(e);
         }
