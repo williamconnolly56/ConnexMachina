@@ -83,12 +83,12 @@ public class ConnexMachina extends Player {
 
     private int evaluate(Board board) {
         Counter winner = boardAnalyser.calculateGameState(board).getWinner();
-        if (winner.equals(counter)) {
-            return 1;
-        } else if (winner.equals(counter.getOther())) {
-            return -1;
-        } else {
+        if(winner == null){
             return 0;
+        } else if (winner.equals(counter)) {
+            return 1;
+        } else {
+            return -1;
         }
     }
 }
