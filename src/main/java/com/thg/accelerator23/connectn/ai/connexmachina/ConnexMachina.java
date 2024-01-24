@@ -85,10 +85,9 @@ public class ConnexMachina extends Player {
     private int evaluate(Board board) {
         Map<Counter, Integer> maxInRow = boardAnalyser.calculateGameState(board).getMaxInARowByCounter();
 
-        Counter currentCounter = counter;
         Counter otherCounter = counter.getOther();
 
-        if (maxInRow.get(currentCounter) == 4) {
+        if (maxInRow.get(counter) == 4) {
             return 1;
         }
         else if (maxInRow.get(otherCounter) == 4) {
