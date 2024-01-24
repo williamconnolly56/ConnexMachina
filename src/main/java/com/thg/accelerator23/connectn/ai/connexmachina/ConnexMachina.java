@@ -1,10 +1,6 @@
 package com.thg.accelerator23.connectn.ai.connexmachina;
 
-import com.thehutgroup.accelerator.connectn.player.Board;
-import com.thehutgroup.accelerator.connectn.player.Counter;
-import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
-import com.thehutgroup.accelerator.connectn.player.Player;
-import com.thehutgroup.accelerator.connectn.player.Position;
+import com.thehutgroup.accelerator.connectn.player.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +13,7 @@ import java.util.stream.Collectors;
 public class ConnexMachina extends Player {
 
     private final Counter counter;
-    private BoardAnalyser boardAnalyser;
+    private final BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(10,8,4));
 
     public ConnexMachina(Counter counter) {
         super(counter, ConnexMachina.class.getName());
