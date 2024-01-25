@@ -17,6 +17,7 @@ public class ConnexMachina extends Player {
     public ConnexMachina(Counter counter) {
         super(counter, ConnexMachina.class.getName());
         this.counter = counter;
+        System.out.println("VERSION 5.2");
     }
 
     public static int[] legalMoves(Board board) {
