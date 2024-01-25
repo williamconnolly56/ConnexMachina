@@ -21,15 +21,20 @@ public class ConnexMachina extends Player {
 
     public static int[] legalMoves(Board board) {
         int[] columnsNotFull = new int[10];
-        int index = 0;
-        for (int column = 0; column <= 9; column++) {
-            Position topOfColumn = new Position(column, 7);
-            if (!board.hasCounterAtPosition(topOfColumn)) {
-                columnsNotFull[index] = column;
-                index++;
+        int count = 0;
+        for (int i = 0; i < 5; i++) {
+            Position topOfColumnLeft = new Position(4 - i, 7);
+            if (!board.hasCounterAtPosition(topOfColumnLeft)) {
+                columnsNotFull[count] = 4 - i;
+                count++;
+            }
+            Position topOfColumnRight = new Position(5 + i, 7);
+            if (!board.hasCounterAtPosition(topOfColumnRight)) {
+                columnsNotFull[count] = 5 + i;
+                count++;
             }
         }
-        return Arrays.copyOf(columnsNotFull, index);
+        return Arrays.copyOf(columnsNotFull, count);
     }
 
     @Override
@@ -44,7 +49,7 @@ public class ConnexMachina extends Player {
     public int minimax(Board board, int depth, boolean maximizingPlayer) throws InvalidMoveException {
         // may need to ad 'OR if game is over' clause to the if statement
         boolean isTerminalNode = isTerminalNode(board);
-        if(depth == 0 || isTerminalNode) {
+        if (depth == 0 || isTerminalNode) {
             return evaluate(board);
         }
 
@@ -84,7 +89,7 @@ public class ConnexMachina extends Player {
 
     boolean isTerminalNode(Board board) {
         GameState gameState = boardAnalyser.calculateGameState(board);
-        if(getWinner(gameState) != 0 || gameState.getIsFull()) {
+        if (getWinner(gameState) != 0 || gameState.getIsFull()) {
             return true;
         } else {
             return false;
@@ -93,7 +98,7 @@ public class ConnexMachina extends Player {
 
     int getWinner(GameState gameState) {
         Counter winner = gameState.getWinner();
-        if(winner == null){
+        if (winner == null) {
             return 0;
         } else if (winner.equals(counter)) {
             return 1;
@@ -152,13 +157,13 @@ public class ConnexMachina extends Player {
                         lookingRight[i] = getBinaryCounterAtPosition(board, position);
                     }
                     int maxValRight = findHorizontalValue(lookingRight, counterToBinary(counter));
-                    if(maxValRight == 4) {
+                    if (maxValRight == 4) {
                         boardValue += 1000;
                     } else {
                         boardValue += maxValRight;
                     }
                     int minValRight = findHorizontalValue(lookingRight, -counterToBinary(counter));
-                    if(minValRight == 4) {
+                    if (minValRight == 4) {
                         boardValue -= 900;
                     } else {
                         boardValue -= minValRight;
