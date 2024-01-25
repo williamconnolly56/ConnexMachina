@@ -46,7 +46,7 @@ public class ConnexMachina extends Player {
         }
     }
 
-    public int minimax(Board board, int depth, boolean maximizingPlayer) throws InvalidMoveException {
+    public int minimax(Board board, int depth, boolean maximizingPlayer, int alpha, int beta) throws InvalidMoveException {
         // may need to ad 'OR if game is over' clause to the if statement
         boolean isTerminalNode = isTerminalNode(board);
         if (depth == 0 || isTerminalNode) {
@@ -57,16 +57,24 @@ public class ConnexMachina extends Player {
             int maxEval = Integer.MIN_VALUE;
             for (int move : legalMoves(board)) {
                 Board newBoard = new Board(board, move, counter);
-                int eval = minimax(newBoard, depth - 1, false);
+                int eval = minimax(newBoard, depth - 1, false, alpha, beta);
                 maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, maxEval);
+                if (beta <= alpha) {
+                    break;
+                }
             }
             return maxEval;
         } else {
             int minEval = Integer.MAX_VALUE;
             for (int move : legalMoves(board)) {
                 Board newBoard = new Board(board, move, counter.getOther());
-                int eval = minimax(newBoard, depth - 1, true);
+                int eval = minimax(newBoard, depth - 1, true, alpha, beta);
                 minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, minEval);
+                if (beta <= alpha) {
+                    break;
+                }
             }
             return minEval;
         }
@@ -77,7 +85,7 @@ public class ConnexMachina extends Player {
         int maxEval = Integer.MIN_VALUE;
         for (int move : legalMoves(board)) {
             Board newBoard = new Board(board, move, counter);
-            int eval = minimax(newBoard, depth - 1, false);
+            int eval = minimax(newBoard, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
             if (eval > maxEval) {
                 maxEval = eval;
                 bestMove = move;
