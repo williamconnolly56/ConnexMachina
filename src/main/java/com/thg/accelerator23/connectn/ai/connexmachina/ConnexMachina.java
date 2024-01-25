@@ -59,7 +59,7 @@ public class ConnexMachina extends Player {
         } else {
             int minEval = Integer.MAX_VALUE;
             for (int move : legalMoves(board)) {
-                Board newBoard = new Board(board, move, counter);
+                Board newBoard = new Board(board, move, counter.getOther());
                 int eval = minimax(newBoard, depth - 1, true);
                 minEval = Math.min(minEval, eval);
             }
@@ -82,7 +82,7 @@ public class ConnexMachina extends Player {
     }
 
 
-    private boolean isTerminalNode(Board board) {
+    boolean isTerminalNode(Board board) {
         GameState gameState = boardAnalyser.calculateGameState(board);
         if(getWinner(gameState) != 0 || gameState.getIsFull()) {
             return true;
@@ -91,7 +91,7 @@ public class ConnexMachina extends Player {
         }
     }
 
-    private int getWinner(GameState gameState) {
+    int getWinner(GameState gameState) {
         Counter winner = gameState.getWinner();
         if(winner == null){
             return 0;
@@ -102,7 +102,7 @@ public class ConnexMachina extends Player {
         }
     }
 
-    private int evaluate(Board board) {
+    int evaluate(Board board) {
         return getWinner(boardAnalyser.calculateGameState(board));
     }
 }
