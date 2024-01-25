@@ -2,16 +2,17 @@ package com.thg.accelerator23.connectn.ai.connexmachina;
 
 import static com.thehutgroup.accelerator.connectn.player.Counter.O;
 import static com.thehutgroup.accelerator.connectn.player.Counter.X;
+import static com.thg.accelerator23.connectn.ai.connexmachina.ConnexMachina.legalMoves;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -107,20 +108,49 @@ public class ConnexMachinaTest {
     @Test
     public void find_best_move_finds_own_winning_move() throws InvalidMoveException {
         int numInARow = 4;
-        int width = 5;
-        int height = 5;
+        int width = 10;
+        int height = 8;
         BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(width, height, numInARow));
         Counter[][] counters = new Counter[height][width];
-        counters[4] = new Counter[]{null, null, null, null, null};
-        counters[3] = new Counter[]{X, null, null, null, null};
-        counters[2] = new Counter[]{O, null, null, null, null};
-        counters[1] = new Counter[]{X, null, null, null, null};
-        counters[0] = new Counter[]{X, O, O, null, null};
+        Counter[] emptyRow = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+
+        counters[7] = emptyRow;
+        counters[6] = emptyRow;
+        counters[5] = emptyRow;
+        counters[4] = emptyRow;
+        counters[3] = emptyRow;
+        counters[2] = emptyRow;
+        counters[1] = emptyRow;
+        counters[0] = emptyRow;
         counters = rotateBoard(counters);
 
-        Board board = new Board(new Board(counters, new GameConfig(width, height, numInARow)), 3, O);
-//        assertEquals(4, connexMachina.findBestMove(board, 2));
+        Board board = new Board(counters, new GameConfig(width, height, numInARow));
+       assertEquals(5, connexMachina.findBestMove(board, 5));
 //        assertTrue(connexMachina.isTerminalNode(board));
+    }
+
+    @Test
+    public void legal_moves_starts_from_middle() throws InvalidMoveException {
+        int numInARow = 4;
+        int width = 10;
+        int height = 8;
+        BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(width, height, numInARow));
+        Counter[][] counters = new Counter[height][width];
+        Counter[] emptyRow = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+
+        counters[7] = emptyRow;
+        counters[6] = emptyRow;
+        counters[5] = emptyRow;
+        counters[4] = emptyRow;
+        counters[3] = emptyRow;
+        counters[2] = emptyRow;
+        counters[1] = emptyRow;
+        counters[0] = emptyRow;
+        counters = rotateBoard(counters);
+
+        Board board = new Board(new Board(counters, new GameConfig(width, height, numInARow)), 4, O);
+        int[] expected = new int[]{4, 5, 3, 6, 2, 7, 1, 8, 0, 9};
+        assertArrayEquals(expected, legalMoves(board));
     }
 
     private Map<Counter, Integer> getCounts(int x, int o) {
