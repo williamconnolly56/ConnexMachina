@@ -125,7 +125,7 @@ public class ConnexMachinaTest {
         counters = rotateBoard(counters);
 
         Board board = new Board(counters, new GameConfig(width, height, numInARow));
-       assertEquals(5, connexMachina.findBestMove(board, 5));
+       assertEquals(4, connexMachina.findBestMove(board, 5));
 //        assertTrue(connexMachina.isTerminalNode(board));
     }
 
