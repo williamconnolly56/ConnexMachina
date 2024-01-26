@@ -152,7 +152,7 @@ public class ConnexMachina extends Player {
             }
             int minValDown = findVerticalValue(lookingDown, -counterToBinary(counter));
             if (minValDown == 4) {
-                boardValue -= 900;
+                boardValue -= 1000;
             } else {
                 boardValue -= minValDown;
             }
@@ -173,7 +173,7 @@ public class ConnexMachina extends Player {
                     }
                     int minValRight = findHorizontalValue(lookingRight, -counterToBinary(counter));
                     if (minValRight == 4) {
-                        boardValue -= 900;
+                        boardValue -= 1000;
                     } else {
                         boardValue -= minValRight;
                     }
